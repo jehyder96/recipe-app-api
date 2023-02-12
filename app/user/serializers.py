@@ -3,7 +3,7 @@ Serializers for the user API View. Serializers is a way to convert objects to an
 """
 from django.contrib.auth import get_user_model
 
-from rest_framework import Serializers
+from rest_framework import serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
