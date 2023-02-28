@@ -24,7 +24,6 @@ from recipe.serializers import (
 RECIPES_URL = reverse('recipe:recipe-list')
 
 
-
 def detail_url(recipe_id):
     """Create and return a recipe detail URL."""
     return reverse('recipe:recipe-detail', args=[recipe_id])
@@ -44,6 +43,7 @@ def create_recipe(user, **params):
     recipe = Recipe.objects.create(user=user, **defaults)
     return recipe
 
+
 def create_user(**params):
     """Create and return a new user."""
     return get_user_model().objects.create_user(**params)
@@ -60,6 +60,7 @@ class PublicRecipeAPITests(TestCase):
         res = self.client.get(RECIPES_URL)
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
 
 class PrivateRecipeApiTests(TestCase):
     """Test authenticated API requests."""
@@ -109,7 +110,7 @@ class PrivateRecipeApiTests(TestCase):
         payload = {
             'title': 'Sample recipe',
             'time_minutes': 30,
-            'price': Decimal('5.99'),
+            'price': Decimal('5.99')
         }
         res = self.client.post(RECIPES_URL, payload)
 
@@ -267,7 +268,7 @@ class PrivateRecipeApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn(tag_lunch, recipe.tags.all())
-        self.assertNotIn(tag_breakfast, recipe.tag.all())
+        self.assertNotIn(tag_breakfast, recipe.tags.all())
 
     def test_clear_recipe_tags(self):
         """Test clearing a recipe tags."""
