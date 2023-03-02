@@ -37,14 +37,14 @@ class RecipeSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'time_minutes', 'price', 'link', 'tags',
             'ingredients',
-            ]
+        ]
         read_only_fields = ['id']
 
     def _get_or_create_tags(self, tags, recipe):
         """Handle getting or creating tags as needed."""
         auth_user = self.context['request'].user
         for tag in tags:
-            tag_obj, created = Tag.objects.get_or_create(
+            tag_obj, create = Tag.objects.get_or_create(
                 user=auth_user,
                 **tag,
             )
@@ -74,9 +74,13 @@ class RecipeSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         """Update recipe."""
         tags = validated_data.pop('tags', None)
+        ingredients = validated_data.pop('ingredients', None)
         if tags is not None:
             instance.tags.clear()
             self._get_or_create_tags(tags, instance)
+        if ingredients is not None:
+            instance.ingredients.clear()
+            self._get_or_create_ingredients(ingredients, instance)
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
